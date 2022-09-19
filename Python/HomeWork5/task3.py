@@ -60,6 +60,11 @@ while game_over == False:
         game_over = True
     else:
         game_over = False
+    # else:
+    #     print("Ничья!")
+    #     game_over = True
+    #     win = "дружба"
+ 
  
     player1 = not(player1)        
      
