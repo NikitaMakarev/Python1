@@ -4,5 +4,5 @@ def view_data(data, title):
 def get_value():
     return int(input('value = '))
 
-def get_value():
+def get_opera():
     return input('Выберите операцию: * / - + **')
