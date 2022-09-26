@@ -7,4 +7,4 @@ def sum_num(num: str) -> int:
     return sum(map(int, filter(lambda i: i.isdigit(), str(num))))
 
 print(sum_num(6782))
-print(sum_num(0,56))
+print(sum_num(0.56))
