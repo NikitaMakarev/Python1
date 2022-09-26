@@ -15,3 +15,7 @@ def get_unic(my_list):
 print(get_unic(my_list))
 
 
+# Второй способ
+
+# list_result1 = list(filter(lambda x: x not in list.numb[x:], my_list))
+# print(list_result1)
