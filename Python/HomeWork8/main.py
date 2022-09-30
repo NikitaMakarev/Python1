@@ -1,5 +1,4 @@
-from controller import *
 
-greeting()
+import controller 
 
-choice()
+controller.main()
