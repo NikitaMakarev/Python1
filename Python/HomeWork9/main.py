@@ -1,17 +1,17 @@
 import logging
-from telegram import Updater, MessageHandler, Filters, CommandHandler, ConversationHandler, RegexHandler, messagequeue as mq
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, ConversationHandler, RegexHandler, messagequeue as mq
 
 from game import tic, tac, start_game
 from settings import TOKEN_FOR_BOT
 
 
-def start(bot, update):
+def start(update, context):
     text = 'Для того чтобы начать играть введите: /start_game.' \
            ' Если во время игры ввести "stop", то игра прервется'
     update.message.reply_text(text)
 
 
-def interceptor(bot, update):
+def interceptor(update, context):
     global board
     if update.message.text == "stop":
         return ConversationHandler.END
@@ -49,7 +49,6 @@ def main():
     updater.start_polling()
 
     updater.idle()
-
 
 if __name__ == '__main__':
     main()
