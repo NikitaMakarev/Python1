@@ -1,21 +1,21 @@
 
-from telegram import ConversationHandler
+from telegram.ext import ConversationHandler
 
 from utils import keyboard
 
 board = list(range(1, 10))
 
-def draw_board(bot,update):
+def draw_board(update, context):
     global board
     for i in range(3):
         update.messege.replay_text(f"| {board[0 + i * 3]} | {board[1 + i * 3]} | {board[2 + i * 3]} |",reply_markup=keyboard())
 
-def start_game(bot,update):
+def start_game(update, context):
     global board
     text = 'Отсюда начнется игра:'
     update.messege.replay_text(text)
     board = list(range(1, 10))
-    draw_board(bot, update)
+    draw_board(update, context)
     update.messege.replay_text(f"Куда поставим X?")
     return "choosing_X"
 
@@ -36,12 +36,12 @@ def check_win():
     else:
         return False
 
-def tic(bot, update):
+def tic(update, context):
     global board
     player_answer = int(update.message.text)
     if str(board[player_answer - 1]) not in "XO":
         board[player_answer - 1] = "X"
-        draw_board(bot, update)
+        draw_board(update, context)
     else:
         update.message.reply_text("Эта клетка уже занята, выберите другую")
         return f"choosing_X"
@@ -56,12 +56,12 @@ def tic(bot, update):
          update.message.reply_text(f"Куда поставим O?")
          return "choosing_O"
 
-def tac(bot, update):
+def tac(update, context):
     global board
     player_answer = int(update.message.text)
     if str(board[player_answer - 1]) not in "XO":
         board[player_answer - 1] = "O"
-        draw_board(bot, update)
+        draw_board(update, context)
     else:
         update.message.reply_text("Эта клетка уже занята, выберите другую")
         return f"choosing_O"
