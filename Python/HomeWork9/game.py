@@ -1,75 +1,122 @@
 
-from telegram.ext import ConversationHandler
+import tkinter.messagebox
+from tkinter import *
+import os
+os.system('cls')
+# выход из приложения
+def exit_(event):
+    root.destroy()
+# начать заново
+def begin(event):
+    global butn
+    global field
+    global numButton
+    for b in butn:
+        b.config(bg="green", text='')
+    field = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    numButton = []
 
-from utils import keyboard
 
-board = list(range(1, 10))
+def logik():
+    global field
+    global numButton
+    if len(numButton) == 9:
+        tkinter.messagebox.showinfo("Конец игры ", "  Ничья!!!  ")
+    else:
+        end = False
+        if field[0] == field[1] == field[2] > 0:
+            winner = field[0]
+            end = True
+        elif field[3] == field[4] == field[5] > 0:
+            winner = field[3]
+            end = True
+        elif field[6] == field[7] == field[8] > 0:
+            winner = field[6]
+            end = True
+        elif field[0] == field[3] == field[6] > 0:
+            winner = field[0]
+            end = True
+        elif field[1] == field[4] == field[7] > 0:
+            winner = field[1]
+            end = True
+        elif field[2] == field[5] == field[8] > 0:
+            winner = field[2]
+            end = True
+        elif field[0] == field[4] == field[8] > 0:
+            winner = field[0]
+            end = True
+        elif field[2] == field[4] == field[6] > 0:
+            winner = field[2]
+            end = True
+        if end:
+            if winner == 1:
+                user = "O"
+            elif winner == 2:
+                user = "X"
+            tkinter.messagebox.showinfo("Конец игры", "Выиграл " + user)
+            begin(None)
 
-def draw_board(update, context):
-    global board
-    for i in range(3):
-        update.messege.replay_text(f"| {board[0 + i * 3]} | {board[1 + i * 3]} | {board[2 + i * 3]} |",reply_markup=keyboard())
 
-def start_game(update, context):
-    global board
-    text = 'Отсюда начнется игра:'
-    update.messege.replay_text(text)
-    board = list(range(1, 10))
-    draw_board(update, context)
-    update.messege.replay_text(f"Куда поставим X?")
-    return "choosing_X"
 
-def check_win():
-    global board
-    win_coord = ((0, 1, 2),(3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6))
-    for each in win_coord:
-        if board[each[0]] == board[each[1]] == board[each[2]]:
-            return board[each[0]]
-    counter = 0
-    for i in board:
-        if type(i) == int:
-            continue
+def click(button, num):
+    global numButton
+    if num not in numButton:
+        global XO
+        if XO == 1:
+            button.config(text='O')
+            button.config(bg='blue')
+            field[num] = XO
+            XO = 2
         else:
-            counter +=1
-    if counter == 9:
-        return counter
-    else:
-        return False
+            button.config(text='X')
+            button.config(bg='red')
+            field[num] = XO
+            XO = 1
+        numButton.append(num)
+        logik()
 
-def tic(update, context):
-    global board
-    player_answer = int(update.message.text)
-    if str(board[player_answer - 1]) not in "XO":
-        board[player_answer - 1] = "X"
-        draw_board(update, context)
-    else:
-        update.message.reply_text("Эта клетка уже занята, выберите другую")
-        return f"choosing_X"
-    tmp = check_win()
-    if type(tmp) == str:
-        update.message.reply_text(f"{tmp} выиграл!")
-        return ConversationHandler.END
-    elif type(tmp) == int:
-        update.message.reply_text("Ничья!")
-        return ConversationHandler.END
-    else:
-         update.message.reply_text(f"Куда поставим O?")
-         return "choosing_O"
 
-def tac(update, context):
-    global board
-    player_answer = int(update.message.text)
-    if str(board[player_answer - 1]) not in "XO":
-        board[player_answer - 1] = "O"
-        draw_board(update, context)
-    else:
-        update.message.reply_text("Эта клетка уже занята, выберите другую")
-        return f"choosing_O"
-    tmp = check_win()
-    if type(tmp) == str:
-         update.message.reply_text(f"{tmp} выиграл!")
-         board = list(range(1, 10))
-         return ConversationHandler.END
-    else:
-        update.message.reply_text(f"Куда поставим X?")
-    return f"choosing_X"
+field = [0, 0, 0, 0, 0, 0, 0, 0, 0]  # список значений 1 или 2
+XO = 1  # крестик - 1, нолик - 2
+numButton = []  # список нажатых кнопок
+
+
+root = Tk()
+root.title("Крестики-нолики")
+root.geometry("233 x 238")
+root.resizable(False, False)
+
+ris0 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris0, 0)) 
+ris0.place(x=0, y=0)
+ris1 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris1, 1))
+ris1.place(x=81, y=0)
+ris2 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris2, 2))
+ris2.place(x=162, y=0)
+
+ris3 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris3, 3))
+ris3.place(x=0, y=81)
+ris4 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris4, 4))
+ris4.place(x=81, y=81)
+ris5 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris5, 5))
+ris5.place(x=162, y=81)
+
+ris6 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris6, 6))
+ris6.place(x=0, y=162)
+ris7 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris7, 7))
+ris7.place(x=81, y=162)
+ris8 = Button(root, width=10, height=5, bg="green",
+               command=lambda: click(ris8, 8))
+ris8.place(x=162, y=162)
+
+butn = [ris0, ris1, ris2, ris3, ris4, ris5, ris6, ris7, ris8]
+
+
+root.mainloop()
